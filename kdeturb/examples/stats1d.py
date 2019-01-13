@@ -32,10 +32,13 @@ timekeylist = hdf5read.getDatasetKeys(input_file,0)
 print("No of time files = ", timekeylist.__len__())
 
 mean = correlation.mean(input_file,'L1',timekeylist,p1,p2)
+print("calculated mean\n")
 
 variance = correlation.variance(input_file,'L1',timekeylist,p1,p2)
+print("calculated variance\n")
 
 Rxx = correlation.Rxx(input_file,'L1',timekeylist,p1,p2,mid)
+print("calculated correlation\n")
 
 X = np.arange(51).reshape(51,1)
 Y1 = mean.reshape(51,1)

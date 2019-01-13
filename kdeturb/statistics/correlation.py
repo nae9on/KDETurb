@@ -36,10 +36,14 @@ def mean(filename,varname,timekeylist,p1,p2):
     
     numfiles = timekeylist.__len__()
     
+    itr = 1
+    
     for time in timekeylist:
         name = varname + '/' + str(time)
-        #print('Read file '+name)
+        if (itr==1 or itr==numfiles or itr%100==0):
+            print('Read file '+name)
         mysum = mysum + fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1]
+        itr = itr + 1
 
     mean = mysum/numfiles
     return mean
@@ -55,10 +59,14 @@ def variance(filename,varname,timekeylist,p1,p2):
     
     numfiles = timekeylist.__len__()
     
+    itr = 1
+    
     for time in timekeylist:
         name = varname + '/' + str(time)
-        #print('Read file '+name)
+        if (itr==1 or itr==numfiles or itr%100==0):
+            print('Read file '+name)
         mysum = mysum + np.square(fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1])
+        itr = itr + 1
 
     variance = mysum/numfiles
     return variance
@@ -76,13 +84,17 @@ def Rxx(filename,varname,timekeylist,p1,p2,mid):
     
     numfiles = timekeylist.__len__()
     
+    itr = 1
+    
     for time in timekeylist:
         name = varname + '/' + str(time)
-        #print('Read file '+name)
+        if (itr==1 or itr==numfiles or itr%100==0):
+            print('Read file '+name)
         pivot = fo[name][mid[0]:mid[0]+1,mid[1]:mid[1]+1,mid[2]:mid[2]+1]
         mysum = mysum + pivot*fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1]
         norm1 = norm1 + pivot*pivot;
         norm2 = norm2 + np.square(fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1])
+        itr = itr + 1
 
     mysum = mysum/numfiles
     norm1 = norm1/numfiles
