@@ -66,7 +66,7 @@ def print_hdf5structure(fo):
     else:
         print("Unknown HDF5 item: ",fo)
         
-def getHDF5FileHandle(filename):
+def getFileHandle(filename):
     fo = h5py.File(filename, 'r')
     return fo
 

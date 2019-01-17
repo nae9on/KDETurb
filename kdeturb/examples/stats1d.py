@@ -1,9 +1,11 @@
 #----------------------------------import built-in modules-----------------------------------------
-import timeit
 import numpy as np
 from socket import gethostname
+import sys
+import timeit
 
 #----------------------------import projects internal modules--------------------------------------
+sys.path.insert(0, "/home/akadar/git/kdeturb")
 from kdeturb.read import hdf5read
 from kdeturb.statistics import correlation
 
@@ -11,14 +13,14 @@ begin_program = timeit.default_timer()
 
 #Get the host system name
 host = gethostname()
-print ("Working on :", host, "computer\n")
+print ("Working on ", host, "computer\n")
 
 #Set Input/Output filename
-input_file = "../../data/pseudo.h5"
-output_file = "./data.csv"
+input_file = "/home/akadar/git/output/pseudo.h5"
+output_file = "/home/akadar/git/output/data.csv"
 
-print ("Data file "+input_file+"\n")
-print ("Output file: "+output_file+"\n")
+print ("Input file "+input_file+"\n")
+print ("Output file "+output_file+"\n")
 
 #hdf5read.hdf5info(input_file)
 
@@ -26,10 +28,11 @@ p1 = np.array([5, 6, 0])
 p2 = np.array([5, 6, 50])
 mid = np.array([5, 6, 25])
 
-print(hdf5read.getGroupKeys(input_file))
+keys = hdf5read.getGroupKeys(input_file)
+print("Keys ",keys,"\n")
 
 timekeylist = hdf5read.getDatasetKeys(input_file,0)
-print("No of time files = ", timekeylist.__len__())
+print("No of time files = ",timekeylist.__len__(),"\n")
 
 mean = correlation.mean(input_file,'L1',timekeylist,p1,p2)
 print("calculated mean\n")

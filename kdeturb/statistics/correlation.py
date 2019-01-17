@@ -12,11 +12,7 @@ This module defines the following functions::
   - Rxx
   
     This function computes the correlations in space 
-             
-Note::
 
-    The data is extracted from hdf5 file format.
- 
 """
 
 #----------------------------------import built-in modules-----------------------------------------
@@ -30,7 +26,12 @@ def mean(filename,varname,timekeylist,p1,p2):
         if(p1[i]>p2[i]):
             p1[i],p2[i]=p2[i],p1[i] #swap
             
-    fo = hdf5read.getHDF5FileHandle(filename)
+    fo = hdf5read.getFileHandle(filename)
+    
+    zN = fo[varname][timekeylist[0]].shape[0]
+    yN = fo[varname][timekeylist[0]].shape[1]
+    xN = fo[varname][timekeylist[0]].shape[2]
+    print("Dimensions are %i x %i x %i", xN, yN, zN)
     
     mysum = np.zeros(p2-p1+1);
     
@@ -53,7 +54,12 @@ def variance(filename,varname,timekeylist,p1,p2):
         if(p1[i]>p2[i]):
             p1[i],p2[i]=p2[i],p1[i] #swap
             
-    fo = hdf5read.getHDF5FileHandle(filename)
+    fo = hdf5read.getFileHandle(filename)
+    
+    zN = fo[varname][timekeylist[0]].shape[0]
+    yN = fo[varname][timekeylist[0]].shape[1]
+    xN = fo[varname][timekeylist[0]].shape[2]
+    print("Dimensions are %i x %i x %i", xN, yN, zN)
     
     mysum = np.zeros(p2-p1+1);
     
@@ -76,7 +82,12 @@ def Rxx(filename,varname,timekeylist,p1,p2,mid):
         if(p1[i]>p2[i]):
             p1[i],p2[i]=p2[i],p1[i] #swap
             
-    fo = hdf5read.getHDF5FileHandle(filename)
+    fo = hdf5read.getFileHandle(filename)
+    
+    zN = fo[varname][timekeylist[0]].shape[0]
+    yN = fo[varname][timekeylist[0]].shape[1]
+    xN = fo[varname][timekeylist[0]].shape[2]
+    print("Dimensions are %i x %i x %i", xN, yN, zN)
     
     mysum = np.zeros(p2-p1+1)
     norm1 = 0
