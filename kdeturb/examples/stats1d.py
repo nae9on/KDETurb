@@ -1,4 +1,5 @@
 #----------------------------------import built-in modules-----------------------------------------
+from matplotlib import pyplot as plt
 import numpy as np
 from socket import gethostname
 import sys
@@ -34,24 +35,28 @@ print("Keys ",keys,"\n")
 timekeylist = hdf5read.getDatasetKeys(input_file,0)
 print("No of time files = ",timekeylist.__len__(),"\n")
 
-mean = correlation.mean(input_file,'L1',timekeylist,p1,p2)
+mean = correlation.mean(input_file,timekeylist,'L1',p1,p2)
 print("calculated mean\n")
 
-variance = correlation.variance(input_file,'L1',timekeylist,p1,p2)
+variance = correlation.variance(input_file,timekeylist,'L1',p1,p2)
 print("calculated variance\n")
 
-Rxx = correlation.Rxx(input_file,'L1',timekeylist,p1,p2,mid)
+Rij = correlation.Rij(input_file,timekeylist,'L1','L1',mid,p1,p2)
 print("calculated correlation\n")
 
 X = np.arange(51).reshape(51,1)
 Y1 = mean.reshape(51,1)
 Y2 = variance.reshape(51,1)
-Y3 = Rxx.reshape(51,1)
+Y3 = Rij.reshape(51,1)
 
 data2write = np.concatenate((X,Y1,Y2,Y3),axis=1)
-np.savetxt(output_file, data2write, delimiter=',', header="Index,Mean,Variance,Rxx", comments="")
+np.savetxt(output_file, data2write, delimiter=',', header="Index,Mean,Variance,Rij", comments="")
 
 print("writing completed")
+
+fig, ax = plt.subplots()
+ax.plot(X,Y3,'o')
+plt.show()
 
 end_program = timeit.default_timer()
 

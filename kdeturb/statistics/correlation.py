@@ -21,95 +21,112 @@ import numpy as np
 #----------------------------import projects internal modules--------------------------------------
 from kdeturb.read import hdf5read
 
-def mean(filename,varname,timekeylist,p1,p2):
-    for i in np.arange(p1.size):
-        if(p1[i]>p2[i]):
-            p1[i],p2[i]=p2[i],p1[i] #swap
+def mean(filename,timekeylist,ui,x1,x2):
+    return one_point_stats(filename,timekeylist,ui,x1,x2,1)
+
+def variance(filename,timekeylist,ui,x1,x2):
+    return one_point_stats(filename,timekeylist,ui,x1,x2,2)
+
+def one_point_stats(filename,timekeylist,ui,x1,x2,p):
+    r"""
+    :param filename: HDF5 filename
+    :param timekeylist: list of all the time values
+    :param ui: ui(x,t)
+    :param x1: begin of x
+    :param x2: end of x
+    :param p: power to be raised with
+    :return: ``one_point_stats`` -- numpy ndarray with one point statistics
+        
+    Procedure::
+    
+     one_point_stats = <ui(x,t)^p>
+    
+    """
+    for i in np.arange(x1.size):
+        if(x1[i]>x2[i]):
+            x1[i],x2[i]=x2[i],x1[i] #swap
             
     fo = hdf5read.getFileHandle(filename)
     
-    zN = fo[varname][timekeylist[0]].shape[0]
-    yN = fo[varname][timekeylist[0]].shape[1]
-    xN = fo[varname][timekeylist[0]].shape[2]
+    zN = fo[ui][timekeylist[0]].shape[0]
+    yN = fo[ui][timekeylist[0]].shape[1]
+    xN = fo[ui][timekeylist[0]].shape[2]
     print("Dimensions are %i x %i x %i", xN, yN, zN)
     
-    mysum = np.zeros(p2-p1+1);
+    mysum = np.zeros(x2-x1+1)
     
     numfiles = timekeylist.__len__()
     
     itr = 1
     
     for time in timekeylist:
-        name = varname + '/' + str(time)
+        
+        name = ui + '/' + str(time)
         if (itr==1 or itr==numfiles or itr%100==0):
-            print('Read file '+name)
-        mysum = mysum + fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1]
+            print('Reading file '+name)
+
+        uixt = fo[ui][time][x1[0]:x2[0]+1,x1[1]:x2[1]+1,x1[2]:x2[2]+1]
+        mysum = mysum + np.power(uixt,p)
         itr = itr + 1
 
-    mean = mysum/numfiles
-    return mean
+    mysum = mysum/numfiles
+    
+    return mysum
 
-def variance(filename,varname,timekeylist,p1,p2):
-    for i in np.arange(p1.size):
-        if(p1[i]>p2[i]):
-            p1[i],p2[i]=p2[i],p1[i] #swap
+def Rij(filename,timekeylist,ui,uj,x,r1,r2):
+    r"""
+    :param filename: HDF5 filename
+    :param timekeylist: list of all the time values
+    :param ui: ui(x,t)
+    :param uj: uj(x+r,t)
+    :param x: pivot point
+    :param r1: begin of r
+    :param r2: end of r
+    :return: ``Rij`` -- numpy ndarray with correlations
+        
+    Procedure::
+    
+     Rij = <ui(x,t)*uj(x+r,t)>
+    
+    """
+    for i in np.arange(r1.size):
+        if(r1[i]>r2[i]):
+            r1[i],r2[i]=r2[i],r1[i] #swap
             
     fo = hdf5read.getFileHandle(filename)
     
-    zN = fo[varname][timekeylist[0]].shape[0]
-    yN = fo[varname][timekeylist[0]].shape[1]
-    xN = fo[varname][timekeylist[0]].shape[2]
+    zN = fo[ui][timekeylist[0]].shape[0]
+    yN = fo[ui][timekeylist[0]].shape[1]
+    xN = fo[ui][timekeylist[0]].shape[2]
     print("Dimensions are %i x %i x %i", xN, yN, zN)
     
-    mysum = np.zeros(p2-p1+1);
+    print('The pivot is '+ui)
     
-    numfiles = timekeylist.__len__()
-    
-    itr = 1
-    
-    for time in timekeylist:
-        name = varname + '/' + str(time)
-        if (itr==1 or itr==numfiles or itr%100==0):
-            print('Read file '+name)
-        mysum = mysum + np.square(fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1])
-        itr = itr + 1
-
-    variance = mysum/numfiles
-    return variance
-
-def Rxx(filename,varname,timekeylist,p1,p2,mid):
-    for i in np.arange(p1.size):
-        if(p1[i]>p2[i]):
-            p1[i],p2[i]=p2[i],p1[i] #swap
-            
-    fo = hdf5read.getFileHandle(filename)
-    
-    zN = fo[varname][timekeylist[0]].shape[0]
-    yN = fo[varname][timekeylist[0]].shape[1]
-    xN = fo[varname][timekeylist[0]].shape[2]
-    print("Dimensions are %i x %i x %i", xN, yN, zN)
-    
-    mysum = np.zeros(p2-p1+1)
+    mysum = np.zeros(r2-r1+1)
     norm1 = 0
-    norm2 = np.zeros(p2-p1+1)
+    norm2 = np.zeros(r2-r1+1)
     
     numfiles = timekeylist.__len__()
     
     itr = 1
     
     for time in timekeylist:
-        name = varname + '/' + str(time)
+        
+        name1 = ui + '/' + str(time)
+        name2 = uj + '/' + str(time)
         if (itr==1 or itr==numfiles or itr%100==0):
-            print('Read file '+name)
-        pivot = fo[name][mid[0]:mid[0]+1,mid[1]:mid[1]+1,mid[2]:mid[2]+1]
-        mysum = mysum + pivot*fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1]
-        norm1 = norm1 + pivot*pivot;
-        norm2 = norm2 + np.square(fo[name][p1[0]:p2[0]+1,p1[1]:p2[1]+1,p1[2]:p2[2]+1])
+            print('Reading files '+name1+' and '+name2)
+
+        uixt = fo[ui][time][x[0]:x[0]+1,x[1]:x[1]+1,x[2]:x[2]+1]
+        ujxrt = fo[uj][time][r1[0]:r2[0]+1,r1[1]:r2[1]+1,r1[2]:r2[2]+1]
+        mysum = mysum + uixt*ujxrt
+        norm1 = norm1 + np.square(uixt);
+        norm2 = norm2 + np.square(ujxrt)
         itr = itr + 1
 
     mysum = mysum/numfiles
     norm1 = norm1/numfiles
     norm2 = norm2/numfiles
     
-    Rxx = np.divide(mysum,np.sqrt(norm1)*np.sqrt(norm2))
-    return Rxx
+    Rij = np.divide(mysum,np.sqrt(norm1*norm2))
+    return Rij
