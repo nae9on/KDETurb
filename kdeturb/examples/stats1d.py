@@ -17,8 +17,8 @@ host = gethostname()
 print ("Working on ", host, "computer\n")
 
 #Set Input/Output filename
-input_file = "/home/akadar/git/output/pseudo.h5"
-output_file = "/home/akadar/git/output/data.csv"
+input_file = "./output/pseudo.h5"
+output_file = "./data.csv"
 
 print ("Input file "+input_file+"\n")
 print ("Output file "+output_file+"\n")
