@@ -51,7 +51,7 @@ def one_point_stats(filename,timekeylist,ui,x1,x2,p):
     zN = fo[ui][timekeylist[0]].shape[0]
     yN = fo[ui][timekeylist[0]].shape[1]
     xN = fo[ui][timekeylist[0]].shape[2]
-    print("Dimensions are %i x %i x %i", xN, yN, zN)
+    print("Dimensions are {:d} x {:d} x {:d}".format(xN, yN, zN))
     
     mysum = np.zeros(x2-x1+1)
     
@@ -98,7 +98,7 @@ def Rij(filename,timekeylist,ui,uj,x,r1,r2):
     zN = fo[ui][timekeylist[0]].shape[0]
     yN = fo[ui][timekeylist[0]].shape[1]
     xN = fo[ui][timekeylist[0]].shape[2]
-    print("Dimensions are %i x %i x %i", xN, yN, zN)
+    print("Dimensions are {:d} x {:d} x {:d}".format(xN, yN, zN))
     
     print('The pivot is '+ui)
     
