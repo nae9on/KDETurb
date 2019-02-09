@@ -21,17 +21,17 @@ import numpy as np
 #----------------------------import projects internal modules--------------------------------------
 from kdeturb.read import hdf5read
 
-def mean(filename,timekeylist,ui,x1,x2):
-    return one_point_stats(filename,timekeylist,ui,x1,x2,1)
+def mean(filename,ui,timekeylist,x1,x2):
+    return one_point_stats(filename,ui,timekeylist,x1,x2,1)
 
-def variance(filename,timekeylist,ui,x1,x2):
-    return one_point_stats(filename,timekeylist,ui,x1,x2,2)
+def variance(filename,ui,timekeylist,x1,x2):
+    return one_point_stats(filename,ui,timekeylist,x1,x2,2)
 
-def one_point_stats(filename,timekeylist,ui,x1,x2,p):
+def one_point_stats(filename,ui,timekeylist,x1,x2,p):
     r"""
     :param filename: HDF5 filename
-    :param timekeylist: list of all the time values
     :param ui: ui(x,t)
+    :param timekeylist: list of all the time values
     :param x1: begin of x
     :param x2: end of x
     :param p: power to be raised with
@@ -73,12 +73,12 @@ def one_point_stats(filename,timekeylist,ui,x1,x2,p):
     
     return mysum
 
-def Rij(filename,timekeylist,ui,uj,x,r1,r2):
+def Rij(filename,ui,uj,timekeylist,x,r1,r2):
     r"""
     :param filename: HDF5 filename
-    :param timekeylist: list of all the time values
     :param ui: ui(x,t)
     :param uj: uj(x+r,t)
+    :param timekeylist: list of all the time values
     :param x: pivot point
     :param r1: begin of r
     :param r2: end of r

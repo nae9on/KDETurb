@@ -13,6 +13,7 @@ Note::
 
 #----------------------------------import built-in modules-----------------------------------------
 import h5py
+import numpy as np
 
 #----------------------------import projects internal modules--------------------------------------
 
@@ -93,3 +94,33 @@ def getDatasetList(filename,varno):
 def getDataset(filename,varno,timeitr):
     fo = h5py.File(filename, 'r')
     return list(list(fo.values())[varno].values())[timeitr]
+
+def slice_dataset(filename,ui,timekeylist,x1,x2):
+    for i in np.arange(x1.size):
+        if(x1[i]>x2[i]):
+            x1[i],x2[i]=x2[i],x1[i] #swap
+        
+    fo = getFileHandle(filename)
+    
+    shape = x2-x1+1
+
+    numfiles = timekeylist.__len__()
+
+    extended_shape = np.concatenate((np.array([numfiles]),shape),axis=0)
+    data_list = np.zeros(extended_shape)
+   
+    itr = 0
+    
+    for time in timekeylist:
+        
+        name = ui + '/' + str(time)
+        if (itr==0 or itr==numfiles-1 or itr%100==0):
+            print('Reading file {:d}'.format(itr)+' '+name)
+
+        uixt = fo[ui][time][x1[0]:x2[0]+1,x1[1]:x2[1]+1,x1[2]:x2[2]+1]
+
+        data_list[itr:itr+1,:] = uixt
+            
+        itr = itr + 1
+        
+    return data_list
