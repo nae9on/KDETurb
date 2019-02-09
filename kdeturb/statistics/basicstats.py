@@ -48,10 +48,7 @@ def one_point_stats(filename,ui,timekeylist,x1,x2,p):
             
     fo = hdf5read.getFileHandle(filename)
     
-    zN = fo[ui][timekeylist[0]].shape[0]
-    yN = fo[ui][timekeylist[0]].shape[1]
-    xN = fo[ui][timekeylist[0]].shape[2]
-    print("Dimensions are {:d} x {:d} x {:d}".format(xN, yN, zN))
+    print("Dataspace ",fo[ui][timekeylist[0]].shape)
     
     mysum = np.zeros(x2-x1+1)
     
@@ -95,10 +92,7 @@ def Rij(filename,ui,uj,timekeylist,x,r1,r2):
             
     fo = hdf5read.getFileHandle(filename)
     
-    zN = fo[ui][timekeylist[0]].shape[0]
-    yN = fo[ui][timekeylist[0]].shape[1]
-    xN = fo[ui][timekeylist[0]].shape[2]
-    print("Dimensions are {:d} x {:d} x {:d}".format(xN, yN, zN))
+    print("Dataspace ",fo[ui][timekeylist[0]].shape)
     
     print('The pivot is '+ui)
     

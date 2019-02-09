@@ -102,6 +102,8 @@ def slice_dataset(filename,ui,timekeylist,x1,x2):
         
     fo = getFileHandle(filename)
     
+    print("Dataspace ",fo[ui][timekeylist[0]].shape)
+    
     shape = x2-x1+1
 
     numfiles = timekeylist.__len__()
