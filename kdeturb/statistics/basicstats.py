@@ -21,7 +21,13 @@ import numpy as np
 #----------------------------import projects internal modules--------------------------------------
 from kdeturb.read import hdf5read
 
-def mean(filename,ui,timekeylist,x1,x2):
+def mean(filename,ui,timekeylist,x1=None,x2=None):
+    if x1 is None:
+        x1 = np.array([0, 0, 0])
+    if x2 is None:
+        fo = hdf5read.getFileHandle(filename)
+        # Convert from tuple to numpy array
+        x2 = np.asarray(fo[ui][timekeylist[0]].shape)-1       
     return one_point_stats(filename,ui,timekeylist,x1,x2,1)
 
 def variance(filename,ui,timekeylist,x1,x2):
