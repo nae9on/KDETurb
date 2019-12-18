@@ -16,8 +16,8 @@ host = gethostname()
 print ("Working on ", host, "computer\n")
 
 #Set Input/Output filename
-input_file = "./output/pseudo.h5"
-output_file = "./data.csv"
+input_file = "D:/kdeturb/ref3D_Coarse/output/pseudo.h5"
+output_file = "D:/kdeturb/data.csv"
 
 print ("Input file "+input_file+"\n")
 print ("Output file "+output_file+"\n")
@@ -34,13 +34,13 @@ print("Keys ",keys,"\n")
 timekeylist = hdf5read.getDatasetKeys(input_file,0)
 print("No of time files = ",timekeylist.__len__(),"\n")
 
-mean = basicstats.mean(input_file,'L1',timekeylist,p1,p2)
+mean = basicstats.mean(input_file,'Vel1',timekeylist,p1,p2)
 print("calculated mean\n")
 
-variance = basicstats.variance(input_file,'L1',timekeylist,p1,p2)
+variance = basicstats.variance(input_file,'Vel1',timekeylist,p1,p2)
 print("calculated variance\n")
 
-Rij = basicstats.Rij(input_file,'L1','L2',timekeylist,mid,p1,p2)
+Rij = basicstats.Rij(input_file,'Vel1','Vel2',timekeylist,mid,p1,p2)
 print("calculated Rij\n")
 
 X = np.arange(51).reshape(51,1)
