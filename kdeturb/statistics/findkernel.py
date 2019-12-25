@@ -1,11 +1,7 @@
-r"""
-This module defines the following functions::
-
-  - gaussian:
-  
-    This function computes the Gaussian kernel.
-
 """
+This module defines functions for kernel density estimation
+"""
+
 #----------------------------------import built-in modules-----------------------------------------
 import numpy as np
 from sklearn.neighbors import KernelDensity

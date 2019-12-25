@@ -2,33 +2,20 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
-from socket import gethostname
-import sys
-import timeit
 
 #----------------------------import projects internal modules--------------------------------------
-sys.path.insert(0, "/home/akadar/git/kdeturb")
-from kdeturb.read import hdf5read
+#sys.path.insert(0, "/home/akadar/git/kdeturb")
+from kdeturb import kdeTurb
 from kdeturb.statistics import findkernel
+from kdeturb.read import hdf5read
 
-begin_program = timeit.default_timer()
-
-#Get the host system name
-host = gethostname()
-print ("Working on ", host, "computer\n")
-
-#Set Input/Output filename
-input_file = "./output/pseudo.h5"
-output_file = "./data.csv"
-
-print ("Input file "+input_file+"\n")
-print ("Output file "+output_file+"\n")
-
-timekeylist = hdf5read.getDatasetKeys(input_file,0)
+input_path = "D:/kdeturb/ref3D_Coarse"
+output_path = "D:/kdeturb/output"
+obj = kdeTurb(input_path, output_path)
 
 p1 = np.array([5, 6, 0])
 
-data_list = hdf5read.slice_dataset(input_file,'U',timekeylist,p1,p1)
+data_list = hdf5read.slice_dataset(obj.h5file,'SF1',obj.timelist,p1,p1)
 
 N = data_list.shape[0]
 

@@ -1,43 +1,28 @@
-r"""
-This module defines the following functions::
-
-  - mean:
-  
-    This function computes the mean.
-
-  - variance:
-  
-    This function computes the variance.
-   
-  - Rxx
-  
-    This function computes the correlations in space 
-
+"""
+This module defines functions for computing basic statistics.
 """
 
 #----------------------------------import built-in modules-----------------------------------------
 import numpy as np
 
 #----------------------------import projects internal modules--------------------------------------
-from kdeturb.read import hdf5read
 
-def mean(filename,ui,timekeylist,x1=None,x2=None):
+def mean(obj,ui,x1=None,x2=None):
     if x1 is None:
         x1 = np.array([0, 0, 0])
     if x2 is None:
-        fo = hdf5read.getFileHandle(filename)
+        fo = obj.fhandle
         # Convert from tuple to numpy array
-        x2 = np.asarray(fo[ui][timekeylist[0]].shape)-1       
-    return one_point_stats(filename,ui,timekeylist,x1,x2,1)
+        x2 = np.asarray(fo[ui][obj.timelist[0]].shape)-1       
+    return one_point_stats(obj,ui,x1,x2,1)
 
-def variance(filename,ui,timekeylist,x1,x2):
-    return one_point_stats(filename,ui,timekeylist,x1,x2,2)
+def variance(obj,ui,x1,x2):
+    return one_point_stats(obj,ui,x1,x2,2)
 
-def one_point_stats(filename,ui,timekeylist,x1,x2,p):
-    r"""
-    :param filename: HDF5 filename
+def one_point_stats(obj,ui,x1,x2,p):
+    """
+    :param obj: object of class kdeTurb
     :param ui: ui(x,t)
-    :param timekeylist: list of all the time values
     :param x1: begin of x
     :param x2: end of x
     :param p: power to be raised with
@@ -52,17 +37,17 @@ def one_point_stats(filename,ui,timekeylist,x1,x2,p):
         if(x1[i]>x2[i]):
             x1[i],x2[i]=x2[i],x1[i] #swap
             
-    fo = hdf5read.getFileHandle(filename)
+    fo = obj.fhandle
     
-    print("Dataspace ",fo[ui][timekeylist[0]].shape)
+    print("Dataspace ",fo[ui][obj.timelist[0]].shape)
     
     mysum = np.zeros(x2-x1+1)
     
-    numfiles = timekeylist.__len__()
+    numfiles = obj.timelist.__len__()
     
     itr = 1
     
-    for time in timekeylist:
+    for time in obj.timelist:
         
         name = ui + '/' + str(time)
         if (itr==1 or itr==numfiles or itr%100==0):
@@ -76,12 +61,11 @@ def one_point_stats(filename,ui,timekeylist,x1,x2,p):
     
     return mysum
 
-def Rij(filename,ui,uj,timekeylist,x,r1,r2):
+def Rij(obj,ui,uj,x,r1,r2):
     r"""
-    :param filename: HDF5 filename
+    :param obj: object of class kdeTurb
     :param ui: ui(x,t)
     :param uj: uj(x+r,t)
-    :param timekeylist: list of all the time values
     :param x: pivot point
     :param r1: begin of r
     :param r2: end of r
@@ -96,9 +80,9 @@ def Rij(filename,ui,uj,timekeylist,x,r1,r2):
         if(r1[i]>r2[i]):
             r1[i],r2[i]=r2[i],r1[i] #swap
             
-    fo = hdf5read.getFileHandle(filename)
+    fo = obj.fhandle
     
-    print("Dataspace ",fo[ui][timekeylist[0]].shape)
+    print("Dataspace ",fo[ui][obj.timelist[0]].shape)
     
     print('The pivot is '+ui)
     
@@ -106,11 +90,11 @@ def Rij(filename,ui,uj,timekeylist,x,r1,r2):
     norm1 = 0
     norm2 = np.zeros(r2-r1+1)
     
-    numfiles = timekeylist.__len__()
+    numfiles = obj.timelist.__len__()
     
     itr = 1
     
-    for time in timekeylist:
+    for time in obj.timelist:
         
         name1 = ui + '/' + str(time)
         name2 = uj + '/' + str(time)
